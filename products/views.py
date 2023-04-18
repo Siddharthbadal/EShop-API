@@ -1,13 +1,13 @@
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from .models import Products, ProductImages
 from .serializers import ProductsSerializer, ProductImagesSerializer
 from .filters import ProductFilter
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import status
-
+from rest_framework.permissions import IsAuthenticated
 
 @api_view(['GET'])
 def get_products(request):
@@ -41,14 +41,17 @@ def get_one_product(request, pk):
         View One product
     """
     product = Products.objects.filter(id=pk)
-    #product = get_object_or_404(Products, id=pk)
+    # product = get_object_or_404(Products, id=pk)
+    print(product)
     serializer = ProductsSerializer(product, many=True)
 
     return Response({"product": serializer.data})
+   
 
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def create_new_product(request):
     """
         create new product    
@@ -57,7 +60,7 @@ def create_new_product(request):
     serializer = ProductsSerializer(data=data)
 
     if serializer.is_valid():
-        product = Products.objects.create(**data)
+        product = Products.objects.create(**data, user=request.user)
         res = ProductsSerializer(product, many=False)
         return Response({ "product": res.data })
     else:
@@ -88,6 +91,7 @@ def upload_product_images(request):
 
 
 @api_view(['PUT'])
+@permission_classes([IsAuthenticated])
 def update_product(request, pk):
     """
         Update a product's details 
@@ -95,6 +99,9 @@ def update_product(request, pk):
     product = get_object_or_404(Products, id=pk)
 
     # check if the user is same 
+    if product.user != request.user:
+        return Response({'error':"You are not allowed to update this product"}, status=status.HTTP_403_FORBIDDEN)
+    
     product.name = request.data['name']
     product.description = request.data['description']
     product.price = request.data['price']
@@ -110,12 +117,16 @@ def update_product(request, pk):
     
 
 @api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
 def delete_product(request, pk):
     """
         Delete a product with images 
     """
     product = get_object_or_404(Products, id=pk)
 
+    if product.user != request.user:
+        return Response({'error':"You are not allowed to delete this product!"}, status=status.HTTP_403_FORBIDDEN)
+    
     args = {"product": pk}
     images = ProductImages.objects.filter(**args)
     for i in images:

@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os 
 from pathlib import Path
 import dotenv
+from datetime import timedelta
 
 dotenv.read_dotenv()
 
@@ -48,7 +49,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'storages',
+    'rest_framework_simplejwt',
     'products.apps.ProductsConfig',
+    'account.apps.AccountConfig'
 ]
 
 MIDDLEWARE = [
@@ -98,8 +101,21 @@ DATABASES = {
 }
 
 REST_FRAMEWORK = {
-    "EXCEPTION_HANDLER": 'utilis.custom_exception_handler.custom_exception_handler'
+    "EXCEPTION_HANDLER": 'utilis.custom_exception_handler.custom_exception_handler',
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
 }
+SIMPLE_JWT = {
+    # validity of the tokens
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    # block the toekn after rotation or refresh
+    'BLACKLIST_AFTER_ROTATION': True,
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_TOKEN_CLASSES': ("rest_framework_simplejwt.tokens.AccessToken",)
+}
+
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
@@ -134,12 +150,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = 'static'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 # STORAGES = {"staticfiles": {"BACKEND": "storages.backends.s3boto3.S3StaticStorage"}}
-STORAGES = {"default": {"BACKEND": "storages.backends.s3boto3.S3Boto3Storage"}}
+# STORAGES = {"default": {"BACKEND": "storages.backends.s3boto3.S3Boto3Storage"}}
 
 
 
@@ -151,6 +168,7 @@ AWS_S3_REGION_NAME=os.environ.get('AWS_S3_REGION_NAME')
 AWS_S3_FILE_OVERWRITE=False
 AWS_DEFAULT_ACL =None
 AWS_S3_VERIFY=True
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
