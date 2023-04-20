@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Products, ProductImages
+from .models import Products, ProductImages, Review
 
 
 
@@ -16,10 +16,11 @@ class ProductsSerializer(serializers.ModelSerializer):
     """
 
     images = ProductImagesSerializer(many=True, read_only=True)
+    reviews = serializers.SerializerMethodField(method_name='get_reviews', read_only=True)
 
     class Meta:
         model = Products
-        fields = ('id','name', 'description', 'price', 'brand', 'category', 'ratings', 'stock', 'user', 'created_at', 'images' )
+        fields = ('id','name', 'description', 'price', 'brand', 'category', 'ratings', 'stock', 'reviews','user', 'created_at', 'images' )
 
         extra_kwargs = {
             "name": {"required": True, "allow_blank":False},
@@ -29,4 +30,15 @@ class ProductsSerializer(serializers.ModelSerializer):
 
         }
 
+    def get_reviews(self, obj):
+        # obj is current product
+        reviews = obj.reviews.all()
+        serializer = ReviewSerializer(reviews, many=True)
+        return serializer.data
 
+
+class ReviewSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Review
+        fields= "__all__"
