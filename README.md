@@ -6,7 +6,7 @@ API has filters applicabale on various fields of the products with proper valida
 
 Created Error handler and exception handler functions to take care of the error pages and messages with status code over the django default error codes.
 
-Applied JWT Authentication to access various endpoints. 
+Applied JWT Authentication to access various endpoints. Email configuration to reset password.
 AWS S3 Bucket is used to store products images. 
 
 
