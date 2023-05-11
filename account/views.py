@@ -11,7 +11,7 @@ from rest_framework.permissions import IsAuthenticated
 from datetime import timedelta, datetime
 from django.core.mail import send_mail
 from django.utils import timezone
-
+from utilis.helpers import get_current_host
 
 @api_view(['POST'])
 def register(request):
@@ -81,13 +81,6 @@ def update_user_password(request):
      return Response(serializer.data)
 
 
-def get_current_host(request):
-    """
-        get the current host name
-    """
-    protocol = request.is_secure() and 'https' or 'http'
-    host = request.get_host()
-    return "{protocol}://{host}/".format(protocol=protocol,host=host)
 
 
 

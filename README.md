@@ -25,6 +25,7 @@ Endpoints for :
     -   Register and login user
     -   Update user account details
     -   Update password 
+    -   Payment with Stripe
 
    
 Project is work in Progress.
