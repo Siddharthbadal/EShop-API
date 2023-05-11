@@ -44,7 +44,7 @@ class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True, related_name='orderitems')
     name = models.CharField(max_length=250, default="", blank=False)
     quantity= models.IntegerField(default=1)
-    price = models.DecimalField(max_digits=7, decimal_places=2, blank=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2, blank=True)
     image = models.CharField(max_length=500, default='', blank=False)
 
     def __str__(self):

@@ -39,3 +39,5 @@ Project is work in Progress.
 
 ![img](https://github.com/Siddharthbadal/EShop-API/blob/main/images/get_one_product.png)
 
+![img](https://github.com/Siddharthbadal/EShop-API/blob/main/images/stripe-payment.png)
+

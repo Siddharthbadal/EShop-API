@@ -127,6 +127,7 @@ def create_checkout_session(request):
         'zip_code': data['zip_code'],
         'phone_no': data['phone'],
         'country':data['country'],
+        
         'User': user.id 
     }
 
@@ -151,7 +152,8 @@ def create_checkout_session(request):
         metadata=shipping_details,
         line_items=checkout_order_items,
         customer_email = user.email,
+        mode='payment',
         success_url=YOUR_DOMAIN,
         cancel_url = YOUR_DOMAIN
     )
-    return Response({session: session})
+    return Response({"session": session})
