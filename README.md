@@ -28,8 +28,6 @@ Endpoints for :
     -   Payment with Stripe
 
    
-Project is work in Progress.
-
 
 ![img](https://github.com/Siddharthbadal/EShop-API/blob/main/images/swagger-img.png)
 
